@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import sequia_integra.entity.temperature.domain.Temperature;
 import sequia_integra.entity.temperature.domain.TemperatureDto;
+import sequia_integra.entity.temperature.domain.VulnerabilityDto;
 import sequia_integra.entity.temperature.service.TemperatureService;
 
 @RestController
@@ -56,6 +57,17 @@ public class TemperatureController {
     @GetMapping("/historic")
     public ResponseEntity<Flux<TemperatureDto>> getHistoric() {
         return ResponseEntity.ok(temperatureService.getHistoric());
+    }
+
+
+    @Operation(summary = "Get vulnerability index")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found vulnerability index"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/danger")
+    public ResponseEntity<Flux<VulnerabilityDto>> getVulnerabilityIndex() {
+        return ResponseEntity.ok(temperatureService.getVulnerabilityIndex());
     }
 
 }
