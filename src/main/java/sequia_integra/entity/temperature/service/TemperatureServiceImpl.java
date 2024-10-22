@@ -7,6 +7,8 @@ import reactor.core.publisher.Mono;
 import sequia_integra.entity.temperature.domain.Temperature;
 import sequia_integra.entity.temperature.domain.TemperatureDto;
 import sequia_integra.entity.temperature.domain.VulnerabilityDto;
+import sequia_integra.entity.temperature.exception.CalculatingHistoricException;
+import sequia_integra.entity.temperature.exception.CalculatingVulnerabilityException;
 import sequia_integra.entity.temperature.repository.TemperatureRepository;
 
 import java.util.HashMap;
@@ -52,7 +54,7 @@ public class TemperatureServiceImpl implements TemperatureService {
 
                     return Flux.fromStream(yearTemps.keySet().stream()
                                     .map(year -> new TemperatureDto(year, yearTemps.get(year) / yearCounts.get(year))))
-                            .onErrorResume(e -> Flux.error(new RuntimeException("Error calculating historic temperatures", e)));
+                            .onErrorResume(e -> Flux.error(new CalculatingHistoricException("Error calculating historic temperatures")));
                 });
     }
 
@@ -88,7 +90,7 @@ public class TemperatureServiceImpl implements TemperatureService {
                                         double vulnerabilityIndex = 1 + ((avgTemp - minTemp) / (maxTemp - minTemp)) * (10 - 1);
                                         return new VulnerabilityDto(year, avgTemp, vulnerabilityIndex);
                                     }))
-                            .onErrorResume(e -> Flux.error(new RuntimeException("Error calculating vulnerability index", e)));
+                            .onErrorResume(e -> Flux.error(new CalculatingVulnerabilityException("Error calculating vulnerability index")));
                 });
     }
 }
