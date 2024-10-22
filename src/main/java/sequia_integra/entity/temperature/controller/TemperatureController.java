@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import sequia_integra.entity.temperature.domain.Temperature;
 import sequia_integra.entity.temperature.domain.TemperatureDto;
 import sequia_integra.entity.temperature.service.TemperatureService;
 
@@ -22,14 +24,14 @@ public class TemperatureController {
         this.temperatureService = temperatureService;
     }
 
-    @GetMapping("/month/{id}/year/{id}")
-    public ResponseEntity<Double> getTempMonth(@PathVariable int year, @PathVariable int month) {
-        return ResponseEntity.ok(temperatureService.getTempMonth(year, month).block());
+    @GetMapping("/month/{year}/{month}")
+    public ResponseEntity<Mono<Double>> getTempMonth(@PathVariable int year, @PathVariable int month) {
+        return ResponseEntity.ok(temperatureService.getTempMonth(year, month));
     }
 
-    @GetMapping("/month/{id}")
-    public ResponseEntity<Double> getTempMonthRandomYear(@PathVariable int month) {
-        return ResponseEntity.ok(temperatureService.getTempMonthRandomYear(month).block());
+    @GetMapping("/month/{month}")
+    public ResponseEntity<Mono<Double>> getTempMonthRandomYear(@PathVariable int month) {
+        return ResponseEntity.ok(temperatureService.getTempMonthRandomYear(month));
     }
 
     @GetMapping("/historic")
