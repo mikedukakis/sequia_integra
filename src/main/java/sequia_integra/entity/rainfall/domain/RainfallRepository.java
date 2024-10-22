@@ -6,8 +6,8 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface RainfallRepository extends ReactiveMongoRepository<RainfallEntity, String> {
-    Mono<RainfallEntity> findById(String id);
+public interface RainfallRepository extends ReactiveMongoRepository<RainfallEntity, Integer> {
+    Mono<RainfallEntity> findByMonthAndYear(int Mes, int Any);
 
     @Override
     Flux<RainfallEntity> findAll();
