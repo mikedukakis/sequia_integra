@@ -1,5 +1,7 @@
 package sequia_integra.entity.rainfall.domain;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.Data;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,16 +16,16 @@ import reactor.core.publisher.Mono;
 public class RainfallController {
     private final RainfallService rainfallService;
 
-    @Operation(summary = "Rainfall for month", description "Retrieve rainfall of a specific month/year")
+    @Operation(summary = "Rainfall for month", description = "Retrieve rainfall of a specific month/year")
     @ApiResponse(responseCode = "200", description = "Details provided successfully")
     @ApiResponse(responseCode = "500", description = "Couldn't access the details")
     @GetMapping("/{month}/{year}")
-    public Mono<RainfallEntity> getRainfall(@PathVariable String id) {
-        return rainfallService.getRainfall(id);
+    public Mono<RainfallEntity> getRainfall(@PathVariable int month, @PathVariable int year) {
+        return rainfallService.getRainfall(month, year);
     }
 
 
-    @Operation(summary = "Rainfall for all months", description "Retrieve rainfall for all months of all years")
+    @Operation(summary = "Rainfall for all months", description = "Retrieve rainfall for all months of all years")
     @ApiResponse(responseCode = "200", description = "Details provided successfully")
     @ApiResponse(responseCode = "500", description = "Couldn't access the details")
     @GetMapping("/month")
