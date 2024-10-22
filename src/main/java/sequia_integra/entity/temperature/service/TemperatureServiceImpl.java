@@ -25,11 +25,20 @@ public class TemperatureServiceImpl implements TemperatureService {
 
     @Override
     public Mono<Temperature> getTempMonth(int year, int month) {
+        if (month < 1 || month > 12) {
+            throw new IllegalArgumentException("Month must be between 1 and 12");
+        }
+        if (year < 1900 || year > 2023) {
+            throw new IllegalArgumentException("Month must be between 1 and 12");
+        }
         return temperatureRepository.findByYearAndMonth(year, month);
     }
 
     @Override
     public Mono<Temperature> getTempMonthRandomYear(int month) {
+        if (month < 1 || month > 12) {
+            throw new IllegalArgumentException("Month must be between 1 and 12");
+        }
         int randomYear = 1900 + (int) (Math.random() * (2023 - 1900 + 1));
         return temperatureRepository.findByYearAndMonth(randomYear, month);
     }

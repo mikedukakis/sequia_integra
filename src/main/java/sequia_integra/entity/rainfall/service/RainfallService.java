@@ -12,11 +12,20 @@ public class RainfallService {
     private final RainfallRepository rainfallRepository;
 
     public Mono<RainfallEntity> getRainfall(int month, int year) {
+        if (month < 1 || month > 12) {
+            throw new IllegalArgumentException("Month must be between 1 and 12");
+        }
+        if (year < 1900 || year > 2023) {
+            throw new IllegalArgumentException("Month must be between 1 and 12");
+        }
         return rainfallRepository.findByMonthAndYear(month, year)
                 .switchIfEmpty(Mono.error(new MonthYearNotFoundException("Month and year did not returna rainfall value" )));
     }
 
     public Mono<RainfallEntity> getMonthRandomYear(int month) {
+        if (month < 1 || month > 12) {
+            throw new IllegalArgumentException("Month must be between 1 and 12");
+        }
         int randomYear = 1900 + (int) (Math.random() * (2023 - 1900 + 1));
         return rainfallRepository.findByMonthAndYear(month, randomYear)
                 .switchIfEmpty(Mono.error(new MonthYearNotFoundException("Rainfall not found by month and year" )));
