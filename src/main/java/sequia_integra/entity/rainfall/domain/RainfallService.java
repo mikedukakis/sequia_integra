@@ -12,7 +12,7 @@ public class RainfallService {
 
     public Mono<RainfallEntity> getRainfall(int month, int year) {
         return rainfallRepository.findByMonthAndYear(month, year)
-                .switchIfEmpty(Mono.error(new RuntimeException("Rainfall not found with ID: " )));
+                .switchIfEmpty(Mono.error(new RainfallNotFoundException("Rainfall not found with ID: " + id)));
     }
 
     public Flux<RainfallEntity> getAllRainfall() {
