@@ -2,7 +2,6 @@ package sequia_integra.entity.rainfall.service;
 
 import lombok.Data;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import sequia_integra.entity.rainfall.domain.RainfallEntity;
 import sequia_integra.entity.rainfall.repository.RainfallRepository;
