@@ -1,37 +1,73 @@
 package sequia_integra.entity.temperature.controller;
 
-import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+import sequia_integra.entity.temperature.domain.Temperature;
+import sequia_integra.entity.temperature.domain.TemperatureDto;
+import sequia_integra.entity.temperature.domain.VulnerabilityDto;
 import sequia_integra.entity.temperature.service.TemperatureService;
 
-@RequiredArgsConstructor
-@RequestMapping("/api/temp")
 @RestController
+@RequestMapping("/api/temp")
 public class TemperatureController {
 
     private final TemperatureService temperatureService;
 
-    //@Operation(summary = "")
-    @GetMapping("/month/{year}")
-    public ResponseEntity<> getTempMonth()
-    {
-
+    @Autowired
+    public TemperatureController(TemperatureService temperatureService) {
+        this.temperatureService = temperatureService;
     }
 
-    @GetMapping("/month/")
-    public ResponseEntity<> getTempMonthRandomYear()
-    {
+    @Operation(summary = "Get temperature by year and month")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Temperature found"),
+            @ApiResponse(responseCode = "404", description = "Temperature not found")
+    })
+    @GetMapping("/month/{year}/{month}")
+    public Mono<ResponseEntity<Temperature>> getTempMonth(@PathVariable int year, @PathVariable int month) {
+        return temperatureService.getTempMonth(year, month)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
 
+    @Operation(summary = "Get temperature by month and random year")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Temperature found"),
+            @ApiResponse(responseCode = "404", description = "Temperature not found")
+    })
+    @GetMapping("/month/{month}")
+    public Mono<ResponseEntity<Temperature>> getTempMonthRandomYear(@PathVariable int month) {
+        return temperatureService.getTempMonthRandomYear(month)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @Operation(summary = "Get historic temperatures")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found historic temperatures"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/historic")
+    public ResponseEntity<Flux<TemperatureDto>> getHistoric() {
+        return ResponseEntity.ok(temperatureService.getHistoric());
     }
 
 
-    @GetMapping("/hist")
-    public ResponseEntity<> getHistoric()
-    {
-
+    @Operation(summary = "Get vulnerability index")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Found vulnerability index"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @GetMapping("/danger")
+    public ResponseEntity<Flux<VulnerabilityDto>> getVulnerabilityIndex() {
+        return ResponseEntity.ok(temperatureService.getVulnerabilityIndex());
     }
 
 }

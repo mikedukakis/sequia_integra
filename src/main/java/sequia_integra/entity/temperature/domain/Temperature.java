@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
 @Setter
@@ -17,8 +18,13 @@ public class Temperature {
     @Id
     private String tempId;
 
+    @Field("Year")
     private int year;
+
+    @Field("Month")
     private int month;
+
+    @Field("Temperature")
     private double temperature;
 
 }
