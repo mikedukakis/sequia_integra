@@ -6,35 +6,37 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import sequia_integra.entity.temperature.domain.Temperature;
 import sequia_integra.entity.temperature.domain.TemperatureDto;
-import sequia_integra.entity.temperature.repository.TemperatureRepositroy;
+import sequia_integra.entity.temperature.domain.VulnerabilityDto;
+import sequia_integra.entity.temperature.repository.TemperatureRepository;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class TemperatureServiceImpl implements TemperatureService {
 
-    private final TemperatureRepositroy temperatureRepositroy;
+    private final TemperatureRepository temperatureRepository;
 
     @Autowired
-    public TemperatureServiceImpl(TemperatureRepositroy temperatureRepositroy) {
-        this.temperatureRepositroy = temperatureRepositroy;
+    public TemperatureServiceImpl(TemperatureRepository temperatureRepository) {
+        this.temperatureRepository = temperatureRepository;
     }
 
     @Override
     public Mono<Temperature> getTempMonth(int year, int month) {
-        return temperatureRepositroy.findByYearAndMonth(year, month);
+        return temperatureRepository.findByYearAndMonth(year, month);
     }
 
     @Override
     public Mono<Temperature> getTempMonthRandomYear(int month) {
         int randomYear = 1900 + (int) (Math.random() * (2023 - 1900 + 1));
-        return temperatureRepositroy.findByYearAndMonth(randomYear, month);
+        return temperatureRepository.findByYearAndMonth(randomYear, month);
     }
 
     @Override
     public Flux<TemperatureDto> getHistoric() {
-        return temperatureRepositroy.findAll()
+        return temperatureRepository.findAll()
                 .collectList()
                 .flatMapMany(temperatures -> {
                     Map<Integer, Double> yearTemps = new HashMap<>();
@@ -53,4 +55,44 @@ public class TemperatureServiceImpl implements TemperatureService {
                             .onErrorResume(e -> Flux.error(new RuntimeException("Error calculating historic temperatures", e)));
                 });
     }
+
+    @Override
+    public Flux<VulnerabilityDto> getVulnerabilityIndex() {
+        return temperatureRepository.findAll()
+                .collectList()
+                .flatMapMany(temperatures -> {
+                    Map<Integer, Double> yearTemps = new HashMap<>();
+                    Map<Integer, Integer> yearCounts = new HashMap<>();
+
+                    for (Temperature temp : temperatures) {
+                        int year = temp.getYear();
+                        if (year >= 1950 && year <= 2023) {
+                            yearTemps.put(year, yearTemps.getOrDefault(year, 0.0) + temp.getTemperature());
+                            yearCounts.put(year, yearCounts.getOrDefault(year, 0) + 1);
+                        }
+                    }
+
+                    // Calculate the average temperature per year
+                    Map<Integer, Double> avgYearTemps = yearTemps.entrySet().stream()
+                            .collect(Collectors.toMap(Map.Entry::getKey,
+                                    entry -> entry.getValue() / yearCounts.get(entry.getKey())));
+
+                    // Get maximum and minimum values
+                    double maxTemp = avgYearTemps.values().stream().max(Double::compare).orElse(0.0);
+                    double minTemp = avgYearTemps.values().stream().min(Double::compare).orElse(0.0);
+
+                    // Calculate the vulnerability index for each year
+                    return Flux.fromStream(avgYearTemps.entrySet().stream()
+                                    .map(entry -> {
+                                        int year = entry.getKey();
+                                        double avgTemp = entry.getValue();
+
+                                        // Vulnerability index scaled from 1 to 10
+                                        double vulnerabilityIndex = 1 + ((avgTemp - minTemp) / (maxTemp - minTemp)) * (10 - 1);
+                                        return new VulnerabilityDto(year, avgTemp, vulnerabilityIndex);
+                                    }))
+                            .onErrorResume(e -> Flux.error(new RuntimeException("Error calculating vulnerability index", e)));
+                });
+    }
+
 }

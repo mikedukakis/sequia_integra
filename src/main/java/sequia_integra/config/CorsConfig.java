@@ -1,4 +1,4 @@
-package sequia_integra.entity.temperature.config;
+package sequia_integra.config;
 
 
 import org.springframework.context.annotation.Configuration;
