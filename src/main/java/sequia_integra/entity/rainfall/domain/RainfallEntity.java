@@ -3,7 +3,8 @@ package sequia_integra.entity.rainfall.domain;
 import lombok.Data;
 
 @Data
-public class Rainfall {
+public class RainfallEntity {
+    private String id;
     private int any;
     private double Precip_Acum_Gener;
     private double Precip_Acum_Febrer;
