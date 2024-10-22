@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import sequia_integra.entity.temperature.domain.Temperature;
+import sequia_integra.entity.temperature.domain.TemperatureDto;
 import sequia_integra.entity.temperature.repository.TemperatureRepositroy;
 
 import java.util.HashMap;
@@ -19,7 +20,6 @@ public class TemperatureServiceImpl implements TemperatureService {
         this.temperatureRepositroy = temperatureRepositroy;
     }
 
-
     @Override
     public Mono<Double> getTempMonth(int year, int month) {
         return temperatureRepositroy.findByYearAndMonth(year, month);
@@ -29,11 +29,10 @@ public class TemperatureServiceImpl implements TemperatureService {
     public Mono<Double> getTempMonthRandomYear(int month) {
         int randomYear = 1900 + (int) (Math.random() * (2023 - 1900 + 1));
         return temperatureRepositroy.findByYearAndMonth(randomYear, month);
-
     }
 
     @Override
-    public Flux<Double> getHistoric() {
+    public Flux<TemperatureDto> getHistoric() {
         return temperatureRepositroy.findAll()
                 .collectList()
                 .flatMapMany(temperatures -> {
@@ -47,10 +46,8 @@ public class TemperatureServiceImpl implements TemperatureService {
                     }
 
                     return Flux.fromStream(monthTemps.keySet().stream()
-                                    .map(month -> monthTemps.get(month) / monthCounts.get(month)))
+                            .map(month -> new TemperatureDto(0, month, 0, monthTemps.get(month) / monthCounts.get(month))))
                             .onErrorResume(e -> Flux.error(new RuntimeException("Error calculating historic temperatures", e)));
                 });
     }
-
-
 }
