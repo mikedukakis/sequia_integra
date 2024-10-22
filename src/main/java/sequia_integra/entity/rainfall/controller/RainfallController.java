@@ -27,7 +27,7 @@ public class RainfallController {
             @ApiResponse(responseCode = "200", description = "Details provided successfully"),
             @ApiResponse(responseCode = "404", description = "Couldn't access the details")
     })
-    @GetMapping("/{month}/{year}")
+    @GetMapping("/month/{month}/{year}")
     public Mono<ResponseEntity<RainfallEntity>> getRainfall(@PathVariable int month, @PathVariable int year) {
         return rainfallService.getRainfall(month, year)
                 .map(rainfall -> ResponseEntity.ok(rainfall))
