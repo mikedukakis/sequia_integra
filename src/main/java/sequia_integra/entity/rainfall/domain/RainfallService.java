@@ -10,8 +10,8 @@ import reactor.core.publisher.Mono;
 public class RainfallService {
     private final RainfallRepository rainfallRepository;
 
-    public Mono<RainfallEntity> getRainfall(String id) {
-        return rainfallRepository.findById(id)
+    public Mono<RainfallEntity> getRainfall(int month, int year) {
+        return rainfallRepository.findByMonthAndYear(month, year)
                 .switchIfEmpty(Mono.error(new RainfallNotFoundException("Rainfall not found with ID: " + id)));
     }
 
