@@ -1,10 +1,12 @@
 package sequia_integra.entity.temperature.domain;
 
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
 @Setter
@@ -15,8 +17,4 @@ public class TemperatureDto {
     private int year;
     private double avgYearTemp;
 
-
-    public double getAvgTemp() {
-        return avgYearTemp;
-    }
 }

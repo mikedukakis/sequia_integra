@@ -79,6 +79,7 @@ public class TemperatureServiceImpl implements TemperatureService {
                     double maxTemp = avgYearTemps.values().stream().max(Double::compare).orElse(0.0);
                     double minTemp = avgYearTemps.values().stream().min(Double::compare).orElse(0.0);
 
+
                     return Flux.fromStream(avgYearTemps.entrySet().stream()
                                     .map(entry -> {
                                         int year = entry.getKey();
