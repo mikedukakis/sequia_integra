@@ -14,10 +14,12 @@ public class RainfallService {
 
     public Mono<RainfallEntity> getRainfall(int month, int year) {
         return rainfallRepository.findByMonthAndYear(month, year)
-                .switchIfEmpty(Mono.error(new RuntimeException("Rainfall not found by month and year" )));
+                .switchIfEmpty(Mono.error(new MonthYearNotFoundException("Month and year did not returna rainfall value" )));
     }
 
-    public Flux<RainfallEntity> getAllRainfall() {
-        return rainfallRepository.findAll();
+    public Mono<RainfallEntity> getMonthRandomYear(int month) {
+        int randomYear = 1900 + (int) (Math.random() * (2023 - 1900 + 1));
+        return rainfallRepository.findByMonthAndYear(month, randomYear)
+                .switchIfEmpty(Mono.error(new MonthYearNotFoundException("Rainfall not found by month and year" )));
     }
 }
