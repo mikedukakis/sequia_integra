@@ -10,11 +10,11 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class RainfallEntity {
     @Id
     private String id;
-    @Field
+    @Field("Month")
     private int month;
-    @Field
+    @Field("Year")
     private int year;
-    @Field
-    private double Precipitation;
+    @Field("Precipitation")
+    private double precipitation;
 
 }

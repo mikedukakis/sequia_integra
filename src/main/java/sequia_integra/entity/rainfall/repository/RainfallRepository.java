@@ -7,7 +7,7 @@ import reactor.core.publisher.Mono;
 import sequia_integra.entity.rainfall.domain.RainfallEntity;
 
 @Repository
-public interface RainfallRepository extends ReactiveMongoRepository<RainfallEntity, Integer> {
+public interface RainfallRepository extends ReactiveMongoRepository<RainfallEntity, String> {
     Mono<RainfallEntity> findByMonthAndYear(int month, int year);
 
     @Override
