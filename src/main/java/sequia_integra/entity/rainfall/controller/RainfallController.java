@@ -3,6 +3,7 @@ package sequia_integra.entity.rainfall.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.Data;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +23,10 @@ public class RainfallController {
     @ApiResponse(responseCode = "200", description = "Details provided successfully")
     @ApiResponse(responseCode = "500", description = "Couldn't access the details")
     @GetMapping("/{month}/{year}")
-    public Mono<RainfallEntity> getRainfall(@PathVariable int month, @PathVariable int year) {
-        return rainfallService.getRainfall(month, year);
+    public Mono<ResponseEntity<RainfallEntity>> getRainfall(@PathVariable int month, @PathVariable int year) {
+        return rainfallService.getRainfall(month, year)
+                .map(rainfall -> ResponseEntity.ok(rainfall))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
 
@@ -31,9 +34,11 @@ public class RainfallController {
     @ApiResponse(responseCode = "200", description = "Details provided successfully")
     @ApiResponse(responseCode = "500", description = "Couldn't access the details")
     @GetMapping("/month")
-    public Flux<RainfallEntity> getAllRainfall() {
-        return rainfallService.getAllRainfall();
+    public Mono<ResponseEntity<Flux<RainfallEntity>>> getAllRainfall() {
+        Flux<RainfallEntity> rainfallFlux = rainfallService.getAllRainfall();
+
+        return Mono.just(ResponseEntity.ok(rainfallFlux))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
-
-
+    
 }

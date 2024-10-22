@@ -33,7 +33,7 @@ public class TemperatureController {
     @GetMapping("/month/{year}/{month}")
     public Mono<ResponseEntity<Temperature>> getTempMonth(@PathVariable int year, @PathVariable int month) {
         return temperatureService.getTempMonth(year, month)
-                .map(temp -> ResponseEntity.ok(temp))
+                .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
@@ -45,7 +45,7 @@ public class TemperatureController {
     @GetMapping("/month/{month}")
     public Mono<ResponseEntity<Temperature>> getTempMonthRandomYear(@PathVariable int month) {
         return temperatureService.getTempMonthRandomYear(month)
-                .map(temp -> ResponseEntity.ok(temp))
+                .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
