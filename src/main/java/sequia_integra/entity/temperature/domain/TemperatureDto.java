@@ -12,8 +12,6 @@ import lombok.Setter;
 public class TemperatureDto {
 
     private int year;
-    private int month;
-    private double temperature;
     private double avgYearTemp;
 
 

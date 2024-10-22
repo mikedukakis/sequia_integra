@@ -22,12 +22,12 @@ public class TemperatureController {
         this.temperatureService = temperatureService;
     }
 
-    @GetMapping("/month/year")
+    @GetMapping("/month/{id}/year/{id}")
     public ResponseEntity<Double> getTempMonth(@PathVariable int year, @PathVariable int month) {
         return ResponseEntity.ok(temperatureService.getTempMonth(year, month).block());
     }
 
-    @GetMapping("/month/")
+    @GetMapping("/month/{id}")
     public ResponseEntity<Double> getTempMonthRandomYear(@PathVariable int month) {
         return ResponseEntity.ok(temperatureService.getTempMonthRandomYear(month).block());
     }

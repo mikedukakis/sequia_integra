@@ -9,6 +9,7 @@ import sequia_integra.entity.temperature.domain.TemperatureDto;
 import sequia_integra.entity.temperature.repository.TemperatureRepositroy;
 
 import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class TemperatureServiceImpl implements TemperatureService {
@@ -36,17 +37,19 @@ public class TemperatureServiceImpl implements TemperatureService {
         return temperatureRepositroy.findAll()
                 .collectList()
                 .flatMapMany(temperatures -> {
-                    HashMap<Integer, Double> monthTemps = new HashMap<>();
-                    HashMap<Integer, Integer> monthCounts = new HashMap<>();
+                    Map<Integer, Double> yearTemps = new HashMap<>();
+                    Map<Integer, Integer> yearCounts = new HashMap<>();
 
                     for (Temperature temp : temperatures) {
-                        int month = temp.getMonth();
-                        monthTemps.put(month, monthTemps.getOrDefault(month, 0.0) + temp.getTemperature());
-                        monthCounts.put(month, monthCounts.getOrDefault(month, 0) + 1);
+                        int year = temp.getYear();
+                        if (year >= 1950 && year <= 2023) {
+                            yearTemps.put(year, yearTemps.getOrDefault(year, 0.0) + temp.getTemperature());
+                            yearCounts.put(year, yearCounts.getOrDefault(year, 0) + 1);
+                        }
                     }
 
-                    return Flux.fromStream(monthTemps.keySet().stream()
-                            .map(month -> new TemperatureDto(0, month, 0, monthTemps.get(month) / monthCounts.get(month))))
+                    return Flux.fromStream(yearTemps.keySet().stream()
+                                    .map(year -> new TemperatureDto(year, yearTemps.get(year) / yearCounts.get(year))))
                             .onErrorResume(e -> Flux.error(new RuntimeException("Error calculating historic temperatures", e)));
                 });
     }
