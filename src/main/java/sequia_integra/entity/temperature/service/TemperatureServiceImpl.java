@@ -72,27 +72,22 @@ public class TemperatureServiceImpl implements TemperatureService {
                         }
                     }
 
-                    // Calculate the average temperature per year
                     Map<Integer, Double> avgYearTemps = yearTemps.entrySet().stream()
                             .collect(Collectors.toMap(Map.Entry::getKey,
                                     entry -> entry.getValue() / yearCounts.get(entry.getKey())));
 
-                    // Get maximum and minimum values
                     double maxTemp = avgYearTemps.values().stream().max(Double::compare).orElse(0.0);
                     double minTemp = avgYearTemps.values().stream().min(Double::compare).orElse(0.0);
 
-                    // Calculate the vulnerability index for each year
                     return Flux.fromStream(avgYearTemps.entrySet().stream()
                                     .map(entry -> {
                                         int year = entry.getKey();
                                         double avgTemp = entry.getValue();
 
-                                        // Vulnerability index scaled from 1 to 10
                                         double vulnerabilityIndex = 1 + ((avgTemp - minTemp) / (maxTemp - minTemp)) * (10 - 1);
                                         return new VulnerabilityDto(year, avgTemp, vulnerabilityIndex);
                                     }))
                             .onErrorResume(e -> Flux.error(new RuntimeException("Error calculating vulnerability index", e)));
                 });
     }
-
 }

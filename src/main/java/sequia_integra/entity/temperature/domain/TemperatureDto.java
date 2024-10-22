@@ -16,5 +16,7 @@ public class TemperatureDto {
     private double avgYearTemp;
 
 
-
+    public double getAvgTemp() {
+        return avgYearTemp;
+    }
 }
