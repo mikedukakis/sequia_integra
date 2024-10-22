@@ -14,7 +14,7 @@ import sequia_integra.entity.rainfall.service.RainfallService;
 
 @Data
 @RestController
-@RequestMapping("api/rainfall")
+@RequestMapping("/api/rainfall")
 public class RainfallController {
     private final RainfallService rainfallService;
 
