@@ -1,9 +1,11 @@
-package sequia_integra.entity.rainfall.domain;
+package sequia_integra.entity.rainfall.service;
 
 import lombok.Data;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import sequia_integra.entity.rainfall.domain.RainfallEntity;
+import sequia_integra.entity.rainfall.repository.RainfallRepository;
 
 @Data
 @Service
@@ -12,7 +14,7 @@ public class RainfallService {
 
     public Mono<RainfallEntity> getRainfall(int month, int year) {
         return rainfallRepository.findByMonthAndYear(month, year)
-                .switchIfEmpty(Mono.error(new RuntimeException("Rainfall not found with ID: " )));
+                .switchIfEmpty(Mono.error(new RuntimeException("Rainfall not found by month and year" )));
     }
 
     public Flux<RainfallEntity> getAllRainfall() {

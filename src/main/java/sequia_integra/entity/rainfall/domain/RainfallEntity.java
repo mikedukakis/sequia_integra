@@ -11,10 +11,10 @@ public class RainfallEntity {
     @Id
     private String id;
     @Field
-    private int Any;
+    private int month;
     @Field
-    private int Mes;
+    private int year;
     @Field
-    private double Precipitacions;
+    private double Precipitation;
 
 }

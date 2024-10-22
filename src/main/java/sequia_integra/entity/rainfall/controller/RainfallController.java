@@ -1,4 +1,4 @@
-package sequia_integra.entity.rainfall.domain;
+package sequia_integra.entity.rainfall.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import sequia_integra.entity.rainfall.domain.RainfallEntity;
+import sequia_integra.entity.rainfall.service.RainfallService;
 
 @Data
 @RestController
