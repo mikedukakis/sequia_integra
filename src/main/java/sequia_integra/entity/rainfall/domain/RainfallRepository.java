@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface RainfallRepository extends ReactiveMongoRepository<Rainfall, String> {
-    Mono<Rainfall> findById(String id);
+public interface RainfallRepository extends ReactiveMongoRepository<RainfallEntity, String> {
+    Mono<RainfallEntity> findById(String id);
 }
