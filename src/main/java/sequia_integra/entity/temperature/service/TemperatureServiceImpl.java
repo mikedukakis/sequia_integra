@@ -22,12 +22,12 @@ public class TemperatureServiceImpl implements TemperatureService {
     }
 
     @Override
-    public Mono<Double> getTempMonth(int year, int month) {
+    public Mono<Temperature> getTempMonth(int year, int month) {
         return temperatureRepositroy.findByYearAndMonth(year, month);
     }
 
     @Override
-    public Mono<Double> getTempMonthRandomYear(int month) {
+    public Mono<Temperature> getTempMonthRandomYear(int month) {
         int randomYear = 1900 + (int) (Math.random() * (2023 - 1900 + 1));
         return temperatureRepositroy.findByYearAndMonth(randomYear, month);
     }
