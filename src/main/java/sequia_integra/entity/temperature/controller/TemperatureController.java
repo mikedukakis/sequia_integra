@@ -25,12 +25,12 @@ public class TemperatureController {
     }
 
     @GetMapping("/month/{year}/{month}")
-    public ResponseEntity<Mono<Double>> getTempMonth(@PathVariable int year, @PathVariable int month) {
+    public ResponseEntity<Mono<Temperature>> getTempMonth(@PathVariable int year, @PathVariable int month) {
         return ResponseEntity.ok(temperatureService.getTempMonth(year, month));
     }
 
     @GetMapping("/month/{month}")
-    public ResponseEntity<Mono<Double>> getTempMonthRandomYear(@PathVariable int month) {
+    public ResponseEntity<Mono<Temperature>> getTempMonthRandomYear(@PathVariable int month) {
         return ResponseEntity.ok(temperatureService.getTempMonthRandomYear(month));
     }
 
