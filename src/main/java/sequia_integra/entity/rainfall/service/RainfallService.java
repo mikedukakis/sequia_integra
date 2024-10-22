@@ -19,7 +19,7 @@ public class RainfallService {
             throw new IllegalArgumentException("Month must be between 1 and 12");
         }
         return rainfallRepository.findByMonthAndYear(month, year)
-                .switchIfEmpty(Mono.error(new MonthYearNotFoundException("Month and year did not returna rainfall value" )));
+                .onErrorResume(e -> Mono.error(new RuntimeException("Month and year did not return rainfall value", e)));
     }
 
     public Mono<RainfallEntity> getMonthRandomYear(int month) {
@@ -28,6 +28,6 @@ public class RainfallService {
         }
         int randomYear = 1900 + (int) (Math.random() * (2023 - 1900 + 1));
         return rainfallRepository.findByMonthAndYear(month, randomYear)
-                .switchIfEmpty(Mono.error(new MonthYearNotFoundException("Rainfall not found by month and year" )));
+                .onErrorResume(e -> Mono.error(new RuntimeException("Rainfall not found by month and year", e)));
     }
 }

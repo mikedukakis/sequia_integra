@@ -28,18 +28,20 @@ class RainfallControllerTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    @Test
-    void testGetRainfall() {
-        RainfallEntity rainfallEntity = new RainfallEntity();
+@Test
+void testGetRainfall() {
+    RainfallEntity rainfallEntity = new RainfallEntity();
+    rainfallEntity.setMonth(10);
+    rainfallEntity.setYear(2023);
+    rainfallEntity.setPrecipitation(100.0);
 
+    when(rainfallService.getRainfall(10, 2023)).thenReturn(Mono.just(rainfallEntity));
 
-        when(rainfallService.getRainfall(2023, 10)).thenReturn(Mono.just(rainfallEntity));
+    ResponseEntity<RainfallEntity> response = rainfallController.getRainfall(10, 2023).block();
 
-        ResponseEntity<RainfallEntity> response = rainfallController.getRainfall(10, 2023).block();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(rainfallEntity, response.getBody());
-    }
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+    assertEquals(rainfallEntity, response.getBody());
+}
 
     @Test
     void testGetRainfallNotFound() {
@@ -55,7 +57,7 @@ class RainfallControllerTest {
         RainfallEntity rainfallEntity = new RainfallEntity();
         rainfallEntity.setMonth(10);
         rainfallEntity.setYear(2020);
-        rainfallEntity.setRainfallAmount(120.0);
+        rainfallEntity.setPrecipitation(120.0);
 
         when(rainfallService.getMonthRandomYear(anyInt())).thenReturn(Mono.just(rainfallEntity));
 
