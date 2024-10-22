@@ -8,7 +8,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "temperatures")
@@ -19,40 +20,11 @@ public class Temperature {
 
     @Field("Year")
     private int year;
+
     @Field("Month")
     private int month;
+
     @Field("Temperature")
     private double temperature;
 
-    public String getTempId() {
-        return tempId;
-    }
-
-    public void setTempId(String tempId) {
-        this.tempId = tempId;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public void setMonth(int month) {
-        this.month = month;
-    }
-
-    public double getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(double temperature) {
-        this.temperature = temperature;
-    }
 }

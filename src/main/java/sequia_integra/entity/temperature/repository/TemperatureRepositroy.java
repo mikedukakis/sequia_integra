@@ -8,10 +8,10 @@ import sequia_integra.entity.temperature.domain.Temperature;
 public interface TemperatureRepositroy extends ReactiveMongoRepository<Temperature, String> {
 
 
-    public Mono<Double> findByYear(int year);
+    public Mono<Temperature> findByYear(int year);
 
-    public Mono<Double> findByMonth(int month);
+    public Mono<Temperature> findByMonth(int month);
 
-    public Mono<Double> findByYearAndMonth(int year, int month);
+    public Mono<Temperature> findByYearAndMonth(int year, int month);
 
 }
